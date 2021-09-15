@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0E445E05-A927-4289-99AA-1EA117D8DAF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Core", "src\DownloadManager.Core\DownloadManager.Core.csproj", "{D87A4389-D91C-43C1-BB91-6A61221435C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Bot.Discord", "src\DownloadManager.Bot.Discord\DownloadManager.Bot.Discord.csproj", "{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Core.Logging", "src\DownloadManager.Core.Logger\DownloadManager.Core.Logging.csproj", "{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Downloader.JDownloader", "src\DownloadManager.Downloader.JDownloader\DownloadManager.Downloader.JDownloader.csproj", "{88F6FAEB-8434-403D-B852-7DE90DCAB393}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadManager.Bot.Data", "src\DownloadManager.Bot.Data\DownloadManager.Bot.Data.csproj", "{9D43A359-BECA-4425-859C-14558AC1AAB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D87A4389-D91C-43C1-BB91-6A61221435C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D87A4389-D91C-43C1-BB91-6A61221435C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D87A4389-D91C-43C1-BB91-6A61221435C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D87A4389-D91C-43C1-BB91-6A61221435C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88F6FAEB-8434-403D-B852-7DE90DCAB393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88F6FAEB-8434-403D-B852-7DE90DCAB393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88F6FAEB-8434-403D-B852-7DE90DCAB393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88F6FAEB-8434-403D-B852-7DE90DCAB393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D43A359-BECA-4425-859C-14558AC1AAB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D43A359-BECA-4425-859C-14558AC1AAB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D43A359-BECA-4425-859C-14558AC1AAB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D43A359-BECA-4425-859C-14558AC1AAB5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D87A4389-D91C-43C1-BB91-6A61221435C8} = {0E445E05-A927-4289-99AA-1EA117D8DAF2}
+		{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C} = {0E445E05-A927-4289-99AA-1EA117D8DAF2}
+		{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B} = {0E445E05-A927-4289-99AA-1EA117D8DAF2}
+		{88F6FAEB-8434-403D-B852-7DE90DCAB393} = {0E445E05-A927-4289-99AA-1EA117D8DAF2}
+		{9D43A359-BECA-4425-859C-14558AC1AAB5} = {0E445E05-A927-4289-99AA-1EA117D8DAF2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B703F45E-3534-4E66-B1C2-FD00041C7E5C}
+	EndGlobalSection
+EndGlobal

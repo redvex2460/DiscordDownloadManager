@@ -1,0 +1,10 @@
+{
+	"Debug" : "false",
+	"JDownloader": {
+		"Email": "test@example.com",
+		"Password": "123456789"
+	},
+	"Discord": {
+		"Token": "<Please enter your Bot-Token from the developers-page of discord>"
+	}
+}
