@@ -49,23 +49,20 @@ namespace DownloadManager.Bot.Discord.Workflow
 
         private async Task RequestLinksAsync(string links)
         {
-            _lastBotMessage = await _channel.SendMessageAsync("Do you want to add a Name for your Package? otherwise click on the reaction below this message!");
+            _lastBotMessage = await _channel.SendMessageAsync("Do you want to add a Name for your Package then reply to this message, otherwise click on the reaction below this message!");
             await _lastBotMessage?.AddReactionAsync(new Emoji("\u23EC"));
-            var result = await this.WaitForReaction(_context, _lastBotMessage, new Emoji("\u23EC"));
-            if (result is SocketReaction)
-            {
-                result = result as SocketReaction;
+            var reaction = WaitForReaction(_context, _lastBotMessage, new Emoji("\u23EC"));
+            var msg = WaitForMessage(_context, _lastBotMessage);
+            var waitResult = Task.WhenAny(msg, reaction);
+            if (waitResult.Result == reaction)
                 Api.Instance.AddDownloadLink(links);
-            }
-            if (result is string)
-            {
-                Api.Instance.AddDownloadLink(links, result.ToString());
-            }
+            else if (waitResult.Result == msg)
+                Api.Instance.AddDownloadLink(links, msg.Result.ToString());
         }
 
         private string ExtractLinks()
         {
-            string urlPattern = @"(?<Links>https?\:\/\/[Aa0-zZ9.\/]*)";
+            string urlPattern = @"(?<Links>https?\:\/\/[Aa0-zZ9.\/-]*)";
             StringBuilder sb = new StringBuilder();
             var matches = Regex.Matches(_context.Message.Content, urlPattern);
             foreach (var match in matches)

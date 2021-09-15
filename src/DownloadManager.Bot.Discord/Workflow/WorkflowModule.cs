@@ -107,16 +107,16 @@ namespace DownloadManager.Bot.Discord.Workflow
             }
         }
 
-        public async Task<bool> WaitForMessage(SocketCommandContext context, IMessage message, string awaitedString)
+        public async Task<string> WaitForMessage(SocketCommandContext context, IMessage message, string awaitedString = "")
         {
-            var triggerResult = new TaskCompletionSource<bool>();
+            var triggerResult = new TaskCompletionSource<string>();
             var socketContext = context;
 
             AddMessageCallback(message, new AsyncMessageCallback(socketContext, obj =>
             {
-                if(obj.Content == awaitedString)
+                if(obj.Content == awaitedString || string.IsNullOrEmpty(awaitedString))
                 {
-                    triggerResult.SetResult(true);
+                    triggerResult.SetResult(obj.Content);
                     return Task.FromResult(true);
                 }
                 return Task.FromResult(false);
@@ -131,7 +131,7 @@ namespace DownloadManager.Bot.Discord.Workflow
             }
             catch
             {
-                return false;
+                return "";
             }
             finally
             {
