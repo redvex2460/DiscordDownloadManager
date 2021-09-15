@@ -54,6 +54,11 @@ namespace DownloadManager.Bot.Discord
                         var workflow = new QueryPackagesWorkflow(context, Client);
                         await workflow.HandleQueryPackagesRequestAsync();
                     }
+                    if (context.Message.Content.ToLower().Contains("help"))
+                    {
+                        var workflow = new QueryHelpWorkflow(context, Client);
+                        await workflow.HandleQueryPackagesRequestAsync();
+                    }
                     if (context.Message.Content.ToLower().Contains("ping"))
                     {
                         await HandlePingCommand(context);
