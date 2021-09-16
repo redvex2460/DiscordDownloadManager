@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DownloadManager.Bot.Discord\DownloadManager.Bot.Discord.csproj" />
     <ProjectReference Include="..\DownloadManager.Core.Logger\DownloadManager.Core.Logging.csproj" />
   </ItemGroup>
 
