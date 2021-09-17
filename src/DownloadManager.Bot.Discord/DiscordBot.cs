@@ -51,7 +51,7 @@ namespace DownloadManager.Bot.DiscordBot
                         if (result != null)
                         {
                             StringBuilder sb = new StringBuilder();
-                            if ((bool)arg.Data.Options.FirstOrDefault(option => option.Name == "finished").Value == false)
+                            if (arg.Data.Options != null && (bool)arg.Data.Options.FirstOrDefault(option => option.Name == "finished").Value == false)
                                 result = result.Where(item => !item.Status.ToLower().Contains("finished")).ToList();
                             foreach (var obj in result)
                             {
