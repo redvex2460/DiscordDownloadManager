@@ -12,6 +12,7 @@ using DownloadManager.Core;
 using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader;
 using Discord.WebSocket;
+using DownloadManager.Bot.Data;
 
 namespace DownloadManager.Bot.DiscordBot
 {
@@ -44,7 +45,9 @@ namespace DownloadManager.Bot.DiscordBot
                             break;
                         }
                         var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
-                        if (Api.Instance.AddDownloadLink(links, arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString()))
+                        var name = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")) != null ? arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString() : "";
+                        var autodownload = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")) != null ? (bool)arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")).Value : (bool)SettingsFile.CachedSettings.JDownloader.AutoDownload;
+                        if (Api.Instance.AddDownloadLink(links, name, autodownload:autodownload))
                             await arg.RespondAsync("Worked!");
                         else
                             await arg.RespondAsync("There was an error!");
@@ -83,7 +86,8 @@ namespace DownloadManager.Bot.DiscordBot
                 slashCommandBuilder.WithName("download");
                 slashCommandBuilder.WithDescription("Adds a Link / multiple Links to JDownloader");
                 slashCommandBuilder.AddOption("links", ApplicationCommandOptionType.String, "Links");
-                slashCommandBuilder.AddOption("name", ApplicationCommandOptionType.String, "Packagename");
+                slashCommandBuilder.AddOption("name", ApplicationCommandOptionType.String, "Packagename", required: false);
+                slashCommandBuilder.AddOption("autodownload", ApplicationCommandOptionType.String, "autodownload", required: false);
                 await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
 
                 slashCommandBuilder = new();

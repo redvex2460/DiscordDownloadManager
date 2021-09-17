@@ -1,4 +1,5 @@
-﻿using DownloadManager.Core.Logging;
+﻿using DownloadManager.Bot.Data;
+using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader.Actions;
 using DownloadManager.Downloader.JDownloader.Models;
 using Newtonsoft.Json;
@@ -101,11 +102,12 @@ namespace DownloadManager.Downloader.JDownloader
             CallDeviceAction<ServerResponse<bool>>(requestData);
         }
 
-        public bool AddDownloadLink(Device dev, string link, string name, string password = "", string linkpassword = "")
+        public bool AddDownloadLink(Device dev, string link, string name, string password = "", string linkpassword = "", bool autodownload = false)
         {
             DeviceRequestData requestData = new DeviceRequestData("/linkgrabberv2/addLinks");
             requestData.Device = dev;
             requestData.Data.links = link;
+            requestData.Data.autostart = autodownload;
             if (!string.IsNullOrEmpty(name))
                 requestData.Data.packageName = name;
             if (!string.IsNullOrEmpty(password))
@@ -118,7 +120,7 @@ namespace DownloadManager.Downloader.JDownloader
             return false;
         }
 
-        public bool AddDownloadLink(string link, string name = "", string password = "", string linkpassword = "")
+        public bool AddDownloadLink(string link, string name = "", string password = "", string linkpassword = "", bool autodownload = false)
         {
             Device dev = Devices.FirstOrDefault();
             return AddDownloadLink(dev, link, name, password, linkpassword);

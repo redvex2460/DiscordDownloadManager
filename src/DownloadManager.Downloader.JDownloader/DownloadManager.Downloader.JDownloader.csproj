@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DownloadManager.Bot.Data\DownloadManager.Bot.Data.csproj" />
     <ProjectReference Include="..\DownloadManager.Core.Logger\DownloadManager.Core.Logging.csproj" />
   </ItemGroup>
 
