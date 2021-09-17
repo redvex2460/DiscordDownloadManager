@@ -38,7 +38,11 @@ namespace DownloadManager.Bot.DiscordBot
             switch (arg.Data.Name)
             {
                 case "download":
-                        if (!Utils.UserHasDownloadManagerRole(arg.User)) await arg.RespondAsync("You have insufficient rights, to use this command");
+                        if (!Utils.UserHasDownloadManagerRole(arg.User))
+                        {
+                            await arg.RespondAsync("You have insufficient rights, to use this command");
+                            break;
+                        }
                         var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
                         if (Api.Instance.AddDownloadLink(links, arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString()))
                             await arg.RespondAsync("Worked!");
@@ -46,7 +50,11 @@ namespace DownloadManager.Bot.DiscordBot
                             await arg.RespondAsync("There was an error!");
                         break;
                     case "status":
-                        if (!Utils.UserHasDownloadManagerRole(arg.User)) await arg.RespondAsync("You have insufficient rights, to use this command");
+                        if (!Utils.UserHasDownloadManagerRole(arg.User))
+                        {
+                            await arg.RespondAsync("You have insufficient rights, to use this command");
+                            break;
+                        }
                         var result = await Api.Instance.QueryLinks();
                         if (result != null)
                         {
