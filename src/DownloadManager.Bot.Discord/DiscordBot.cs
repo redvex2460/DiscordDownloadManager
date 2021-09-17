@@ -39,8 +39,8 @@ namespace DownloadManager.Bot.DiscordBot
             {
                 case "download":
                         if (!Utils.UserHasDownloadManagerRole(arg.User)) await arg.RespondAsync("You have insufficient rights, to use this command");
-                        var links = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links"));
-                        if (Api.Instance.AddDownloadLink(links.Value.ToString(), arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString()))
+                        var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
+                        if (Api.Instance.AddDownloadLink(links, arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString()))
                             await arg.RespondAsync("Worked!");
                         else
                             await arg.RespondAsync("There was an error!");
