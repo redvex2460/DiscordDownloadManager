@@ -6,81 +6,86 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.Commands;
-using Discord.WebSocket;
-using DownloadManager.Bot.Discord.Workflow;
 using DownloadManager.Core;
 using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader;
+using Discord.WebSocket;
 
-namespace DownloadManager.Bot.Discord
+namespace DownloadManager.Bot.DiscordBot
 {
     public class DiscordBot
     {
         public Task BotTask { get; set; }
         DiscordSocketClient Client { get; set; }
-        CommandService Commands { get; set; }
         public string Token { get; set; }
 
         public DiscordBot(string token)
         {
             Client = new DiscordSocketClient();
-            Commands = new CommandService();
             Client.Log += Log;
-            Client.MessageReceived += OnMessageRecieved;
-            Commands.AddModulesAsync(assembly: Assembly.GetExecutingAssembly(), null);
+            Client.GuildAvailable += OnGuildAvailable;
+            Client.SlashCommandExecuted += OnSlashCommand;
             Token = token;
             BotTask = Task.Run(StartBot);
         }
 
-        private Task OnMessageRecieved(SocketMessage arg)
+        private Task OnSlashCommand(SocketSlashCommand arg)
         {
             _ = Task.Run(async () =>
             {
-                var message = arg as SocketUserMessage;
-                var context = new SocketCommandContext(Client, message);
-                if (context.User.IsBot) return;
-
-                int argPos = 0;
-                if (message.HasStringPrefix("!", ref argPos))
-                {
-                    if (context.Message.Content.ToLower().Contains("download"))
-                    {
-                        var workflow = new AddDownloadsWorkflow(context, Client);
-                        await workflow.HandleDownloadRequestAsync();
-                    }
-                    if (context.Message.Content.ToLower().Contains("status"))
-                    {
-                        var workflow = new QueryPackagesWorkflow(context, Client);
-                        await workflow.HandleQueryPackagesRequestAsync();
-                    }
-                    if (context.Message.Content.ToLower().Contains("help"))
-                    {
-                        var workflow = new QueryHelpWorkflow(context, Client);
-                        await workflow.HandleQueryPackagesRequestAsync();
-                    }
-                    if (context.Message.Content.ToLower().Contains("ping"))
-                    {
-                        await HandlePingCommand(context);
-                    }
+            switch (arg.Data.Name)
+            {
+                case "download":
+                        if (!Utils.UserHasDownloadManagerRole(arg.User)) await arg.RespondAsync("You have insufficient rights, to use this command");
+                        var links = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links"));
+                        if (Api.Instance.AddDownloadLink(links.Value.ToString(), arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString()))
+                            await arg.RespondAsync("Worked!");
+                        else
+                            await arg.RespondAsync("There was an error!");
+                        break;
+                    case "status":
+                        if (!Utils.UserHasDownloadManagerRole(arg.User)) await arg.RespondAsync("You have insufficient rights, to use this command");
+                        var result = await Api.Instance.QueryLinks();
+                        if (result != null)
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            if ((bool)arg.Data.Options.FirstOrDefault(option => option.Name == "finished").Value == false)
+                                result = result.Where(item => !item.Status.ToLower().Contains("finished")).ToList();
+                            foreach (var obj in result)
+                            {
+                                sb.AppendLine($"{obj.Name} : status: {obj.Status}");
+                            }
+                            await arg.RespondAsync(sb.ToString());
+                        }
+                        else
+                            await arg.RespondAsync("There was an error!");
+                        break;
                 }
-                return;
             });
             return Task.CompletedTask;
         }
 
-        private Task HandlePingCommand(SocketCommandContext context)
+        private Task OnGuildAvailable(SocketGuild arg)
         {
-            if (Utils.UserHasDownloadManagerRole(context.User))
+            _ = Task.Run(async () =>
             {
-                if (context.Message.Content.ToLower() == "!ping")
-                {
-                    Api.Instance.PingDevice();
-                }
-            }
+                SlashCommandBuilder slashCommandBuilder = new();
+                slashCommandBuilder.WithName("download");
+                slashCommandBuilder.WithDescription("Adds a Link / multiple Links to JDownloader");
+                slashCommandBuilder.AddOption("links", ApplicationCommandOptionType.String, "Links");
+                slashCommandBuilder.AddOption("name", ApplicationCommandOptionType.String, "Packagename");
+                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+
+                slashCommandBuilder = new();
+                slashCommandBuilder.WithName("status");
+                slashCommandBuilder.WithDescription("Query the JDownloader for active Downloads");
+                slashCommandBuilder.AddOption("finished", ApplicationCommandOptionType.Boolean, "Should finished downloads be shown?", false);
+                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+            });
             return Task.CompletedTask;
         }
-
         public async Task StartBot()
         {
             await Client.LoginAsync(TokenType.Bot, Token);

@@ -8,7 +8,7 @@ namespace DownloadManager.Bot.Data
 {
     public class SettingsFile
     {
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
         public const string Path = ".//config/settings.json";
         public static dynamic CachedSettings = null;
         public static dynamic Read()

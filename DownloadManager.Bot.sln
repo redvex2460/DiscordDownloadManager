@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0E445E05-A92
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Core", "src\DownloadManager.Core\DownloadManager.Core.csproj", "{D87A4389-D91C-43C1-BB91-6A61221435C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Bot.Discord", "src\DownloadManager.Bot.Discord\DownloadManager.Bot.Discord.csproj", "{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Bot.DiscordBot", "src\DownloadManager.Bot.Discord\DownloadManager.Bot.DiscordBot.csproj", "{5D7DF7DC-D9AF-4052-B2A9-302859F3AB7C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Core.Logging", "src\DownloadManager.Core.Logger\DownloadManager.Core.Logging.csproj", "{6E3B9AD9-1C68-40DF-A9DD-3AC9A985327B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Downloader.JDownloader", "src\DownloadManager.Downloader.JDownloader\DownloadManager.Downloader.JDownloader.csproj", "{88F6FAEB-8434-403D-B852-7DE90DCAB393}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadManager.Bot.Data", "src\DownloadManager.Bot.Data\DownloadManager.Bot.Data.csproj", "{9D43A359-BECA-4425-859C-14558AC1AAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadManager.Bot.Data", "src\DownloadManager.Bot.Data\DownloadManager.Bot.Data.csproj", "{9D43A359-BECA-4425-859C-14558AC1AAB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

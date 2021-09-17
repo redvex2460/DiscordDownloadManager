@@ -1,5 +1,5 @@
 ﻿using DownloadManager.Bot.Data;
-using DownloadManager.Bot.Discord;
+using DownloadManager.Bot.DiscordBot;
 using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader;
 using System;
@@ -14,14 +14,14 @@ namespace DownloadManager.Bot.Core
     public class ServiceManager
     {
 
-        public static DiscordBot DiscordBot { get; set; }
+        public static DiscordBot.DiscordBot DiscordBot { get; set; }
         public static Api JDownloaderApi { get; set; }
         public static dynamic Settings => SettingsFile.Read();
         public ServiceManager()
         {
             SettingsFile.CreateFromTemplate();
             Logger.LogMessage("Creating DiscordBot...");
-            DiscordBot = new DiscordBot(Settings.Discord.Token.ToString());
+            DiscordBot = new DiscordBot.DiscordBot(ServiceManager.Settings.Discord.Token.ToString());
             JDownloaderApi = new Api(Settings.JDownloader.Email.ToString(), Settings.JDownloader.Password.ToString());
             while(true)
             {

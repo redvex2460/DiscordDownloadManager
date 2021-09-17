@@ -1,4 +1,4 @@
-﻿using DownloadManager.Bot.Discord;
+﻿using DownloadManager.Bot.DiscordBot;
 using DownloadManager.Downloader.JDownloader;
 using DownloadManager.Core.Logging;
 using Microsoft.Extensions.DependencyInjection;

@@ -75,18 +75,18 @@ namespace DownloadManager.Downloader.JDownloader
             if (dev == null) dev = Devices.FirstOrDefault();
             DeviceRequestData requestData = new DeviceRequestData("/downloadsV2/queryPackages");
             requestData.Device = dev;
-            requestData.Data.bytesLoaded = true;
-            requestData.Data.bytesTotal = true;
+            //requestData.Data.bytesLoaded = true;
+            //requestData.Data.bytesTotal = true;
             requestData.Data.childCount = true;
-            requestData.Data.comment = true;
+            //requestData.Data.comment = true;
             requestData.Data.enabled = true;
-            requestData.Data.eta = true;
-            requestData.Data.finished = true;
-            requestData.Data.hosts = true;
-            requestData.Data.maxResults = 10;
+            //requestData.Data.eta = true;
+            requestData.Data.finished = false;
+            //requestData.Data.hosts = true;
+            requestData.Data.maxResults = 100;
             requestData.Data.running = true;
-            requestData.Data.saveTo = true;
-            requestData.Data.speed = true;
+            //requestData.Data.saveTo = true;
+            //requestData.Data.speed = true;
             requestData.Data.status = true;
             var response = CallDeviceAction<ServerResponse<List<QueryPackagesServerResponse>>>(requestData);
             return response.Data;
@@ -113,7 +113,8 @@ namespace DownloadManager.Downloader.JDownloader
             if (!string.IsNullOrEmpty(linkpassword))
                 requestData.Data.linkpassword = linkpassword;
             var id = CallDeviceAction<ServerResponse<dynamic>>(requestData);
-            //requestData.Data.destinationFolder = 
+            if (id.Data != null)
+                return true;
             return false;
         }
 

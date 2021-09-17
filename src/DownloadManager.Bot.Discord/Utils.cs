@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DownloadManager.Bot.Data;
-namespace DownloadManager.Bot.Discord
+namespace DownloadManager.Bot.DiscordBot
 {
     class Utils
     {

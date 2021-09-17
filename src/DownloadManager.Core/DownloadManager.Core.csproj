@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DownloadManager.Bot.Data\DownloadManager.Bot.Data.csproj" />
-    <ProjectReference Include="..\DownloadManager.Bot.Discord\DownloadManager.Bot.Discord.csproj" />
+    <ProjectReference Include="..\DownloadManager.Bot.Discord\DownloadManager.Bot.DiscordBot.csproj" />
     <ProjectReference Include="..\DownloadManager.Core.Logger\DownloadManager.Core.Logging.csproj" />
     <ProjectReference Include="..\DownloadManager.Downloader.JDownloader\DownloadManager.Downloader.JDownloader.csproj" />
   </ItemGroup>
