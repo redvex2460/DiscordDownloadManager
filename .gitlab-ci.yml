@@ -9,7 +9,7 @@
 #
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
-image: docker:19.03.14
+image: docker:19.03.14-dind
 stages:
   - build
   - publish
