@@ -22,7 +22,8 @@ build:
 
 publish:
   stage: publish
-  only: master
+  only:
+    - master
   artifacts:
     paths:
       - publish/
