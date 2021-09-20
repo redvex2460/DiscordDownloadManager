@@ -11,7 +11,7 @@
 # for the default branch and all other (MR) branches.
 
 docker-build:
-  image: docker:latestbuild_job
+  image: docker:20
   stage: build
   script:
     - ls
