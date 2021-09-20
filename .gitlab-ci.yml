@@ -29,4 +29,4 @@ publish:
       - publish/
   script:
     - echo "Publishing now..."
-    - "dotnet publish -c release -o publish -r linux_x64"
+    - "dotnet publish -c release -o publish"
