@@ -9,24 +9,23 @@
 #
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
+image: mcr.microsoft.com/dotnet/sdk:5.0
 stages:
-  - publish
   - build
+  - publish
+
+build:
+  stage: build
+  script:
+    - echo "Building ...."
+    - dotnet build
 
 publish:
   stage: publish
+  only: master
+  artifacts:
+    paths:
+      - publish/
   script:
     - echo "Publishing now..."
     - "dotnet publish -c releast -o publish"
-
-build:
-  image: docker:20
-  stage: build
-  script:
-    - ls
-    - echo "starting job..."
-    - docker build -t "redvex2460/discobot:latest" .
-    - echo job finished
-  only:
-    - develop
-    - master
