@@ -16,6 +16,9 @@ stages:
   - build_docker
   - publish_docker
 
+services:
+  - docker:dind
+
 build:
   stage: build
   script:
