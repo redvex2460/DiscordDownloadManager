@@ -46,7 +46,7 @@ namespace DownloadManager.Bot.DiscordBot
                         }
                         var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
                         var name = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")) != null ? arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString() : "";
-                        var autodownload = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")) != null ? (bool)arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")).Value : (bool)SettingsFile.CachedSettings.JDownloader.AutoDownload;
+                        var autodownload = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")) != null ? (bool)arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")).Value : SettingsFile.CachedSettings.JDownloader.AutoDownload;
                         if (Api.Instance.AddDownloadLink(links, name, autodownload:autodownload))
                             await arg.RespondAsync("Worked!");
                         else

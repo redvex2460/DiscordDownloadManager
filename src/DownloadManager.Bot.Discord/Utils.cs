@@ -17,7 +17,7 @@ namespace DownloadManager.Bot.DiscordBot
         public static bool UserHasDownloadManagerRole(SocketUser user)
         {
             SocketGuildUser guildUser = user as SocketGuildUser;
-            if (guildUser.Roles.FirstOrDefault(role => role.Name.ToLower() == SettingsFile.Read().Discord.Role.ToString().ToLower()) != null)
+            if (guildUser.Roles.FirstOrDefault(role => role.Name.ToLower() == SettingsFile.CachedSettings.Discord.Role.ToLower()) != null)
                 return true;
             return false;
         }

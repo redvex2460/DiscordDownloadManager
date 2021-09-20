@@ -1,4 +1,5 @@
-﻿using DownloadManager.Core.Logging;
+﻿using DownloadManager.Bot.Data.Models;
+using DownloadManager.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -6,18 +7,24 @@ using System.IO;
 
 namespace DownloadManager.Bot.Data
 {
-    public class SettingsFile
+    public partial class SettingsFile
     {
         private static readonly object _lock = new object();
         public const string Path = ".//config/settings.json";
-        public static dynamic CachedSettings = null;
+        public static SettingsFile CachedSettings = null;
+
+        public bool Debug { get; set; }
+        public JDownloaderSettings JDownloader { get; set; }
+        public DiscordSettings Discord { get; set; }
+
+
         public static dynamic Read()
         {
             dynamic settings = null;
             lock(_lock)
             {
                 if (CachedSettings == null)
-                    CachedSettings = JObject.Parse(File.ReadAllText(Path));
+                    CachedSettings = JsonConvert.DeserializeObject<SettingsFile>(File.ReadAllText(Path));
                 settings = CachedSettings;
             }
             Logger.Debug = settings.Debug;
@@ -28,7 +35,7 @@ namespace DownloadManager.Bot.Data
         {
             lock (_lock)
             {
-                File.WriteAllText(Path, CachedSettings);
+                File.WriteAllText(Path, JsonConvert.SerializeObject(CachedSettings));
             }
         }
 
