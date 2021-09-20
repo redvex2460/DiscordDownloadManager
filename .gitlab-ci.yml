@@ -9,8 +9,17 @@
 #
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
+stages:
+  - publish
+  - build
 
-docker-build:
+publish:
+  stage: publish
+  script:
+    - echo "Publishing now..."
+    - "dotnet publish -c releast -o publish"
+
+build:
   image: docker:20
   stage: build
   script:
