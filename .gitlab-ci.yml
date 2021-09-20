@@ -16,9 +16,6 @@ stages:
   - build_docker
   - publish_docker
 
-services:
-  - docker:dind
-
 build:
   image: mcr.microsoft.com/dotnet/sdk:5.0
   stage: build
@@ -40,8 +37,6 @@ publish:
 
 build_docker:
   stage: build_docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
   only:
     - master
   script:
