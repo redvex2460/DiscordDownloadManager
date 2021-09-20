@@ -41,7 +41,7 @@ publish:
 build_docker:
   stage: build_docker
   variables:
-    DOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: tcp://localhost:2375
   only:
     - master
   script:
