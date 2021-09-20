@@ -39,6 +39,8 @@ publish:
 build_docker:
   image: docker:latest
   stage: build_docker
+  variables:
+    DOCKER_HOST: tcp://localhost:2375/
   only:
     - master
   script:
