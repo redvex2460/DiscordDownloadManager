@@ -50,4 +50,4 @@ publish_docker:
   script:
     - echo "Uploading docker....."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-    - docker push . -t redvex2460/discoloader:nightly
+    - docker push redvex2460/discoloader:nightly
