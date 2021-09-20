@@ -16,7 +16,7 @@ docker-build:
   script:
     - ls
     - echo "starting job..."
-    - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-0.1.${CI_JOB_ID}" .
+    - docker build -t "redvex2460/discobot:latest" .
     - echo job finished
   only:
     - develop
