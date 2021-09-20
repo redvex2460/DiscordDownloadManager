@@ -13,6 +13,8 @@ image: mcr.microsoft.com/dotnet/sdk:5.0
 stages:
   - build
   - publish
+  - build_docker
+  - publish_docker
 
 build:
   stage: build
@@ -30,3 +32,19 @@ publish:
   script:
     - echo "Publishing now..."
     - "dotnet publish -c release -o publish"
+
+build_docker:
+  stage: build_docker
+  only:
+    - master
+  script:
+    - echo "Building docker...."
+    - docker build . -t redvex2460/discoloader:autobuild
+
+publish_docker:
+  stage: publish_docker
+  only:
+    - master
+  script:
+    - echo "Uploading docker....."
+    - docker push . -t redvex2460/discoloader:autobuild
