@@ -1,4 +1,4 @@
-# DiscoLoader
+# ![DiscoLoader](/images/discoloader.jpg)
 DiscoLoader is a discord bot for managing downloads of Jdownloader2
 
 you could add a command via chat, name it and autodownload it.
