@@ -9,14 +9,40 @@ namespace DownloadManager.Bot.Data
 {
     public partial class SettingsFile
     {
-        private static readonly object _lock = new object();
+        #region Public Fields
+
         public const string Path = ".//config/settings.json";
         public static SettingsFile CachedSettings = null;
 
-        public bool Debug { get; set; }
-        public JDownloaderSettings JDownloader { get; set; }
-        public DiscordSettings Discord { get; set; }
+        #endregion Public Fields
 
+        #region Private Fields
+
+        private static readonly object _lock = new object();
+
+        #endregion Private Fields
+
+        #region Public Properties
+
+        public bool Debug { get; set; }
+        public DiscordSettings Discord { get; set; }
+        public JDownloaderSettings JDownloader { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public static void CreateFromTemplate()
+        {
+            if (!Directory.Exists("./config/")) Directory.CreateDirectory("./config/");
+            if (!File.Exists(Path))
+            {
+                Logger.LogMessage("Couldn´t find settings.json file, creating a new one.");
+                File.Copy("settings.template.json", Path);
+                Logger.LogMessage("Please fill out the settings.json and restart the bot.");
+                Environment.Exit(1);
+            }
+        }
 
         public static dynamic Read()
         {
@@ -39,16 +65,6 @@ namespace DownloadManager.Bot.Data
             }
         }
 
-        public static void CreateFromTemplate()
-        {
-            if (!Directory.Exists("./config/")) Directory.CreateDirectory("./config/");
-            if(!File.Exists(Path))
-            {
-                Logger.LogMessage("Couldn´t find settings.json file, creating a new one.");
-                File.Copy("settings.template.json", Path);
-                Logger.LogMessage("Please fill out the settings.json and restart the bot.");
-                Environment.Exit(1);
-            }
-        }
+        #endregion Public Methods
     }
 }

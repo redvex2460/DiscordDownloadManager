@@ -9,39 +9,15 @@ namespace DownloadManager.Downloader.JDownloader
 {
     class Utils
     {
-        internal static readonly HttpClient httpClient = new HttpClient();
-        internal static string Get(string url) => httpClient.GetStringAsync(url).Result;
-        internal static string Post(string url, string data) => httpClient.PostAsync(url, new StringContent(data)).Result.Content.ReadAsStringAsync().Result;
+        #region Internal Fields
+
         internal static readonly SHA256Managed _sha256Managed = new SHA256Managed();
-        internal static byte[] GetSecret(string email, string password, string domain)
-        {
-            return _sha256Managed.ComputeHash(Encoding.UTF8.GetBytes($"{email.ToLower()}{password}{domain.ToLower()}"));
-        }
+        internal static readonly HttpClient httpClient = new HttpClient();
 
-        internal static byte[] sha256(byte[] input)
-        {
-            return _sha256Managed.ComputeHash(input);
-        }
+        #endregion Internal Fields
 
-        internal static string GetRequestId()
-        {
-            return DateTime.UtcNow.Ticks.ToString();
-        }
+        #region Internal Methods
 
-        internal static byte[] UpdateTokens(byte[] old, byte[] newtkn)
-        {
-            var newhash = new byte[old.Length + newtkn.Length];
-            old.CopyTo(newhash, 0);
-            newtkn.CopyTo(newhash, 32);
-            return _sha256Managed.ComputeHash(newhash);
-        }
-
-        internal static string GetSignature(string url, byte[] secret)
-        {
-            var urlAsBytes = Encoding.UTF8.GetBytes(url);
-            var hasher = new HMACSHA256(secret);
-            return hasher.ComputeHash(urlAsBytes).Aggregate("", (current, t) => current + t.ToString("X2").ToLower());
-        }
         internal static string Decrypt(string text, byte[] secret)
         {
             var iv = new byte[16];
@@ -72,6 +48,7 @@ namespace DownloadManager.Downloader.JDownloader
                 }
             }
         }
+
         internal static string Encrypt(string text, byte[] secret)
         {
             var iv = new byte[16];
@@ -102,5 +79,38 @@ namespace DownloadManager.Downloader.JDownloader
                 return Convert.ToBase64String(stream.ToArray());
             }
         }
+
+        internal static string Get(string url) => httpClient.GetStringAsync(url).Result;
+        internal static string GetRequestId()
+        {
+            return DateTime.UtcNow.Ticks.ToString();
+        }
+
+        internal static byte[] GetSecret(string email, string password, string domain)
+        {
+            return _sha256Managed.ComputeHash(Encoding.UTF8.GetBytes($"{email.ToLower()}{password}{domain.ToLower()}"));
+        }
+
+        internal static string GetSignature(string url, byte[] secret)
+        {
+            var urlAsBytes = Encoding.UTF8.GetBytes(url);
+            var hasher = new HMACSHA256(secret);
+            return hasher.ComputeHash(urlAsBytes).Aggregate("", (current, t) => current + t.ToString("X2").ToLower());
+        }
+
+        internal static string Post(string url, string data) => httpClient.PostAsync(url, new StringContent(data)).Result.Content.ReadAsStringAsync().Result;
+        internal static byte[] sha256(byte[] input)
+        {
+            return _sha256Managed.ComputeHash(input);
+        }
+        internal static byte[] UpdateTokens(byte[] old, byte[] newtkn)
+        {
+            var newhash = new byte[old.Length + newtkn.Length];
+            old.CopyTo(newhash, 0);
+            newtkn.CopyTo(newhash, 32);
+            return _sha256Managed.ComputeHash(newhash);
+        }
+
+        #endregion Internal Methods
     }
 }

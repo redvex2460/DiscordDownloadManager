@@ -18,9 +18,7 @@ namespace DownloadManager.Bot.DiscordBot
 {
     public class DiscordBot
     {
-        public Task BotTask { get; set; }
-        DiscordSocketClient Client { get; set; }
-        public string Token { get; set; }
+        #region Public Constructors
 
         public DiscordBot(string token)
         {
@@ -30,6 +28,60 @@ namespace DownloadManager.Bot.DiscordBot
             Client.SlashCommandExecuted += OnSlashCommand;
             Token = token;
             BotTask = Task.Run(StartBot);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public Task BotTask { get; set; }
+        public string Token { get; set; }
+
+        #endregion Public Properties
+
+        #region Private Properties
+        DiscordSocketClient Client { get; set; }
+
+        #endregion Private Properties
+
+        #region Public Methods
+
+        public async Task StartBot()
+        {
+            await Client.LoginAsync(TokenType.Bot, Token);
+            await Client.StartAsync();
+            await Task.Delay(-1);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private Task Log(LogMessage logMessage)
+        {
+            Logger.LogMessage($"Discord: {logMessage}");
+            return Task.CompletedTask;
+        }
+
+        private Task OnGuildAvailable(SocketGuild arg)
+        {
+            _ = Task.Run(async () =>
+            {
+                SlashCommandBuilder slashCommandBuilder = new();
+                slashCommandBuilder.WithName("download");
+                slashCommandBuilder.WithDescription("Adds a Link / multiple Links to JDownloader");
+                slashCommandBuilder.AddOption("links", ApplicationCommandOptionType.String, "Links");
+                slashCommandBuilder.AddOption("name", ApplicationCommandOptionType.String, "Packagename", required: false);
+                slashCommandBuilder.AddOption("autodownload", ApplicationCommandOptionType.String, "autodownload", required: false);
+                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+
+                slashCommandBuilder = new();
+                slashCommandBuilder.WithName("status");
+                slashCommandBuilder.WithDescription("Query the JDownloader for active Downloads");
+                slashCommandBuilder.AddOption("finished", ApplicationCommandOptionType.Boolean, "Should finished downloads be shown?", false);
+                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+            });
+            return Task.CompletedTask;
         }
 
         private Task OnSlashCommand(SocketSlashCommand arg)
@@ -78,38 +130,6 @@ namespace DownloadManager.Bot.DiscordBot
             return Task.CompletedTask;
         }
 
-        private Task OnGuildAvailable(SocketGuild arg)
-        {
-            _ = Task.Run(async () =>
-            {
-                SlashCommandBuilder slashCommandBuilder = new();
-                slashCommandBuilder.WithName("download");
-                slashCommandBuilder.WithDescription("Adds a Link / multiple Links to JDownloader");
-                slashCommandBuilder.AddOption("links", ApplicationCommandOptionType.String, "Links");
-                slashCommandBuilder.AddOption("name", ApplicationCommandOptionType.String, "Packagename", required: false);
-                slashCommandBuilder.AddOption("autodownload", ApplicationCommandOptionType.String, "autodownload", required: false);
-                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
-
-                slashCommandBuilder = new();
-                slashCommandBuilder.WithName("status");
-                slashCommandBuilder.WithDescription("Query the JDownloader for active Downloads");
-                slashCommandBuilder.AddOption("finished", ApplicationCommandOptionType.Boolean, "Should finished downloads be shown?", false);
-                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
-            });
-            return Task.CompletedTask;
-        }
-        public async Task StartBot()
-        {
-            await Client.LoginAsync(TokenType.Bot, Token);
-            await Client.StartAsync();
-            await Task.Delay(-1);
-        }
-
-        private Task Log(LogMessage logMessage)
-        {
-            Logger.LogMessage($"Discord: {logMessage}");
-            return Task.CompletedTask;
-        }
-
+        #endregion Private Methods
     }
 }
