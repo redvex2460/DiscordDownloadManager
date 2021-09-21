@@ -9,15 +9,45 @@
 #
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
-
-docker-build:
-  image: docker:20
+image: docker:19.03.14-dind
+stages:
+  - build
+  - publish
+  - build_docker
+  - publish_docker
+  
+build:
+  image: mcr.microsoft.com/dotnet/sdk:5.0
   stage: build
   script:
-    - ls
-    - echo "starting job..."
-    - docker build -t "redvex2460/discobot:latest" .
-    - echo job finished
+    - echo "Building ...."
+    - dotnet build
+
+publish:
+  image: mcr.microsoft.com/dotnet/sdk:5.0
+  stage: publish
   only:
-    - develop
     - master
+  artifacts:
+    paths:
+      - publish/
+  script:
+    - echo "Publishing now..."
+    - "dotnet publish -c release -o publish"
+
+build_docker:
+  stage: build_docker
+  only:
+    - master
+  script:
+    - echo "Building docker...."
+    - docker build . -t redvex2460/discoloader:nightly
+
+publish_docker:
+  stage: publish_docker
+  only:
+    - master
+  script:
+    - echo "Uploading docker....."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+    - docker push redvex2460/discoloader:nightly
