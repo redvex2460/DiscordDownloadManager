@@ -1,7 +1,6 @@
 ﻿using DownloadManager.Bot.Data.Models;
 using DownloadManager.Core.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
@@ -47,7 +46,7 @@ namespace DownloadManager.Bot.Data
         public static dynamic Read()
         {
             dynamic settings = null;
-            lock(_lock)
+            lock (_lock)
             {
                 if (CachedSettings == null)
                     CachedSettings = JsonConvert.DeserializeObject<SettingsFile>(File.ReadAllText(Path));

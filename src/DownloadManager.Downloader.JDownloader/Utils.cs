@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DownloadManager.Downloader.JDownloader
 {
@@ -80,7 +81,10 @@ namespace DownloadManager.Downloader.JDownloader
             }
         }
 
-        internal static string Get(string url) => httpClient.GetStringAsync(url).Result;
+        internal static async Task<string> Get(string url)
+        {
+            return await httpClient.GetStringAsync(url);
+        }
         internal static string GetRequestId()
         {
             return DateTime.UtcNow.Ticks.ToString();
@@ -97,8 +101,11 @@ namespace DownloadManager.Downloader.JDownloader
             var hasher = new HMACSHA256(secret);
             return hasher.ComputeHash(urlAsBytes).Aggregate("", (current, t) => current + t.ToString("X2").ToLower());
         }
-
-        internal static string Post(string url, string data) => httpClient.PostAsync(url, new StringContent(data)).Result.Content.ReadAsStringAsync().Result;
+        internal static async Task<string> Post(string url, string data)
+        {
+            var response = await httpClient.PostAsync(url, new StringContent(data));
+            return await response.Content.ReadAsStringAsync();
+        }
         internal static byte[] sha256(byte[] input)
         {
             return _sha256Managed.ComputeHash(input);

@@ -13,6 +13,7 @@ using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader;
 using Discord.WebSocket;
 using DownloadManager.Bot.Data;
+using DownloadManager.Downloader.JDownloader.Models;
 
 namespace DownloadManager.Bot.DiscordBot
 {
@@ -26,8 +27,27 @@ namespace DownloadManager.Bot.DiscordBot
             Client.Log += Log;
             Client.GuildAvailable += OnGuildAvailable;
             Client.SlashCommandExecuted += OnSlashCommand;
+            Client.Ready += OnReady;
             Token = token;
             BotTask = Task.Run(StartBot);
+        }
+
+        private Task OnDownloadFinished(QueryPackagesServerResponse package)
+        {
+            _ = Task.Run(async () =>
+            {
+                IMessageChannel channel = (IMessageChannel)await Client.GetChannelAsync(887052383954292776);
+                await channel.SendMessageAsync($"{package.Name} finished download!");
+            });
+            return Task.CompletedTask;
+        }
+
+        private Task OnReady()
+        {
+            if (Client.Guilds.Count <= 0)
+                Logger.LogMessage("Looks like I´m not member of a Server, please add me to the Server");
+            Api.Instance.OnDownloadFinished += OnDownloadFinished;
+            return Task.CompletedTask;
         }
 
         #endregion Public Constructors
@@ -99,7 +119,7 @@ namespace DownloadManager.Bot.DiscordBot
                         var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
                         var name = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")) != null ? arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString() : "";
                         var autodownload = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")) != null ? (bool)arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")).Value : SettingsFile.CachedSettings.JDownloader.AutoDownload;
-                        if (Api.Instance.AddDownloadLink(links, name, autodownload:autodownload))
+                        if (await Api.Instance.AddDownloadLink(links, name, autodownload:autodownload))
                             await arg.RespondAsync("Worked!");
                         else
                             await arg.RespondAsync("There was an error!");
@@ -114,8 +134,13 @@ namespace DownloadManager.Bot.DiscordBot
                         if (result != null)
                         {
                             StringBuilder sb = new StringBuilder();
+                            if (result.Count <= 0)
+                            {
+                                await arg.RespondAsync("No Downloads in queue");
+                                break;
+                            }
                             if (arg.Data.Options != null && (bool)arg.Data.Options.FirstOrDefault(option => option.Name == "finished").Value == false)
-                                result = result.Where(item => !item.Status.ToLower().Contains("finished")).ToList();
+                                result = (ActivePackageList)result.Where(item => !item.Status.ToLower().Contains("finished")).ToList();
                             foreach (var obj in result)
                             {
                                 sb.AppendLine($"{obj.Name} : status: {obj.Status}");

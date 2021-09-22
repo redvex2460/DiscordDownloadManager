@@ -1,32 +1,50 @@
 ﻿using DownloadManager.Core.Logging;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DownloadManager.Downloader.JDownloader.Actions
 {
-    public abstract class ServerAction
+    public class ServerAction
     {
-        public byte[] Token;
-        public byte[] Key;
+        #region Public Fields
+
         public string ApiPath;
+        public byte[] Key;
+        public Dictionary<string, string> Parameters;
         public string RequestId;
         public RequestType RequestType;
-        public Dictionary<string,string> Parameters;
+        public byte[] Token;
+
+        #endregion Public Fields
+
+        #region Public Constructors
+
         public ServerAction ()
         {
             RequestId = Utils.GetRequestId();
             Parameters = new Dictionary<string, string>();
         }
-        public virtual string ExecuteRequest(string data = "")
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public virtual async Task<string> ExecuteRequest(string data = "")
         {
             var response = "";
             if (RequestType == RequestType.Get)
-                response = Utils.Get(GetSignatedUrl());
+                response = await Utils.Get(GetSignatedUrl());
             else
-                response = Utils.Post(GetSignatedUrl(),data);
+                response = await Utils.Post(GetSignatedUrl(),data);
             response = Utils.Decrypt(response, Key);
             Logger.LogMessage(response, LogType.Debug);
             return response;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private string GetSignatedUrl()
         {
             string url = $"{ApiPath}?";
@@ -43,5 +61,7 @@ namespace DownloadManager.Downloader.JDownloader.Actions
             Logger.LogMessage($"{GetType().Name} : GetSignatedUrl : {url}", LogType.Debug);
             return $"https://api.jdownloader.org{url}";
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,25 +1,34 @@
-﻿using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Discord;
+using Discord.WebSocket;
 using DownloadManager.Bot.Data;
+using System.Linq;
+
 namespace DownloadManager.Bot.DiscordBot
 {
-    class Utils
+    internal class Utils
     {
-        public static bool IsUserABot(SocketUser user)
-        {
-            return user.IsBot;
-        }
+        #region Public Methods
 
-        public static bool UserHasDownloadManagerRole(SocketUser user)
+        /// <summary>
+        /// Checks if the <paramref name="user"/> is a bot
+        /// </summary>
+        /// <param name="user">SocketUser</param>
+        /// <returns>true or false</returns>
+        public static bool IsUserABot(IUser user) => user.IsBot;
+
+        /// <summary>
+        /// Checks if the <paramref name="user"/> has designated role
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>true or false</returns>
+        public static bool UserHasDownloadManagerRole(IUser user)
         {
             SocketGuildUser guildUser = user as SocketGuildUser;
             if (guildUser.Roles.FirstOrDefault(role => role.Name.ToLower() == SettingsFile.CachedSettings.Discord.Role.ToLower()) != null)
                 return true;
             return false;
         }
+
+        #endregion Public Methods
     }
 }
