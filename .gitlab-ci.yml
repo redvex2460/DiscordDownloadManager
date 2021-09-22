@@ -13,8 +13,10 @@ image: docker:19.03.14-dind
 stages:
   - build
   - publish
-  - build_docker
-  - publish_docker
+  - build_master
+  - publish_master
+  - build_dev
+  - publish_dev
   
 build:
   image: mcr.microsoft.com/dotnet/sdk:5.0
@@ -26,8 +28,6 @@ build:
 publish:
   image: mcr.microsoft.com/dotnet/sdk:5.0
   stage: publish
-  only:
-    - master
   artifacts:
     paths:
       - publish/
@@ -35,19 +35,36 @@ publish:
     - echo "Publishing now..."
     - "dotnet publish -c release -o publish"
 
-build_docker:
-  stage: build_docker
+build_dev:
+  stage: build_dev
   only:
-    - master
+    - dev
   script:
     - echo "Building docker...."
     - docker build . -t redvex2460/discoloader:dev
 
-publish_docker:
-  stage: publish_docker
+publish_dev:
+  stage: publish_dev
+  only:
+    - dev
+  script:
+    - echo "Uploading docker....."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+    - docker push redvex2460/discoloader:dev
+
+build_master:
+  stage: build_master
+  only:
+    - master
+  script:
+    - echo "Building docker...."
+    - docker build . -t redvex2460/discoloader:master
+
+publish_master:
+  stage: publish_master
   only:
     - master
   script:
     - echo "Uploading docker....."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-    - docker push redvex2460/discoloader:dev
+    - docker push redvex2460/discoloader:master
