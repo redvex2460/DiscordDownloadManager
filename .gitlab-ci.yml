@@ -41,7 +41,7 @@ build_docker:
     - master
   script:
     - echo "Building docker...."
-    - docker build . -t redvex2460/discoloader:nightly
+    - docker build . -t redvex2460/discoloader:dev
 
 publish_docker:
   stage: publish_docker
@@ -50,4 +50,4 @@ publish_docker:
   script:
     - echo "Uploading docker....."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-    - docker push redvex2460/discoloader:nightly
+    - docker push redvex2460/discoloader:dev
