@@ -13,6 +13,14 @@ For Docker it could be used as follow:
 docker run -v <Path where to store the config file>:/app/config --name DiscoLoader redvex2460/discoloader:latest
 ```
 
+## Discord Dev API
+
+Head to https://discord.com/developers/applications and create a bot with the name you want - keep in mind to dont name it like the rolename you want to use otherwise you cant add users to that role
+
+Then switch to the OAuth2-Page of that application and add the bot with the following permissions to your server.
+
+### ![Permissions](/images/botsettings.jpg)
+
 ## Usage
 
 ```python
@@ -23,6 +31,9 @@ docker run -v <Path where to store the config file>:/app/config --name DiscoLoad
 
 #Checks the downloadstatus of JDownload2
 /queryPackages
+
+#Add a user to the DownloadManager-Role
+/permit <username>
 ```
 
 ## License

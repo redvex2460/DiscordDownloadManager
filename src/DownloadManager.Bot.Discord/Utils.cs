@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DownloadManager.Bot.DiscordBot
 {
-    internal class Utils
+    public static class Utils
     {
         #region Public Methods
 
@@ -30,5 +30,15 @@ namespace DownloadManager.Bot.DiscordBot
         }
 
         #endregion Public Methods
+
+        public static IGuild GetGuildOfChannelId(this DiscordSocketClient client, ulong id)
+        {
+            return client.Guilds.FirstOrDefault(guild => guild.Channels.FirstOrDefault(channel => channel.Id == id) != null);
+        }
+
+        public static IRole GetRole(this IGuild guild, string name)
+        {
+            return guild.Roles.FirstOrDefault(role => role.Name.ToLower().Equals(name.ToLower()));
+        }
     }
 }

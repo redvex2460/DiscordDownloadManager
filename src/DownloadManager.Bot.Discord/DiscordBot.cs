@@ -13,6 +13,7 @@ using DownloadManager.Core.Logging;
 using DownloadManager.Downloader.JDownloader;
 using Discord.WebSocket;
 using DownloadManager.Bot.Data;
+using DownloadManager.Bot.DiscordBot.Commands;
 using DownloadManager.Downloader.JDownloader.Models;
 
 namespace DownloadManager.Bot.DiscordBot
@@ -100,6 +101,14 @@ namespace DownloadManager.Bot.DiscordBot
                 slashCommandBuilder.WithDescription("Query the JDownloader for active Downloads");
                 slashCommandBuilder.AddOption("finished", ApplicationCommandOptionType.Boolean, "Should finished downloads be shown?", false);
                 await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+                
+                slashCommandBuilder = new();
+                slashCommandBuilder.WithName("permit");
+                slashCommandBuilder.AddOption("user", ApplicationCommandOptionType.User, "User which should be added to Downloadmanager");
+                slashCommandBuilder.WithDescription("Adds the selected user to DownloadManagerRole");
+                await arg.CreateApplicationCommandAsync(slashCommandBuilder.Build());
+
+                await SetupServerRoles(arg);
             });
             return Task.CompletedTask;
         }
@@ -111,48 +120,28 @@ namespace DownloadManager.Bot.DiscordBot
             switch (arg.Data.Name)
             {
                 case "download":
-                        if (!Utils.UserHasDownloadManagerRole(arg.User))
-                        {
-                            await arg.RespondAsync("You have insufficient rights, to use this command");
-                            break;
-                        }
-                        var links = string.Join("\r\n",arg.Data.Options.FirstOrDefault(a => a.Name.Equals("links")).Value.ToString().Split(" "));
-                        var name = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")) != null ? arg.Data.Options.FirstOrDefault(a => a.Name.Equals("name")).Value.ToString() : "";
-                        var autodownload = arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")) != null ? (bool)arg.Data.Options.FirstOrDefault(a => a.Name.Equals("autodownload")).Value : SettingsFile.CachedSettings.JDownloader.AutoDownload;
-                        if (await Api.Instance.AddDownloadLink(links, name, autodownload:autodownload))
-                            await arg.RespondAsync("Worked!");
-                        else
-                            await arg.RespondAsync("There was an error!");
+                        await DownloadCommand.HandleCommand(arg);
                         break;
                     case "status":
-                        if (!Utils.UserHasDownloadManagerRole(arg.User))
-                        {
-                            await arg.RespondAsync("You have insufficient rights, to use this command");
-                            break;
-                        }
-                        var result = await Api.Instance.QueryLinks();
-                        if (result != null)
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            if (result.Count <= 0)
-                            {
-                                await arg.RespondAsync("No Downloads in queue");
-                                break;
-                            }
-                            if (arg.Data.Options != null && (bool)arg.Data.Options.FirstOrDefault(option => option.Name == "finished").Value == false)
-                                result = (ActivePackageList)result.Where(item => !item.Status.ToLower().Contains("finished")).ToList();
-                            foreach (var obj in result)
-                            {
-                                sb.AppendLine($"{obj.Name} : status: {obj.Status}");
-                            }
-                            await arg.RespondAsync(sb.ToString());
-                        }
-                        else
-                            await arg.RespondAsync("There was an error!");
+                        await StatusCommand.HandleCommand(arg);
+                        break;
+                    case "permit":
+                        await PermitCommand.HandleCommand(arg);
                         break;
                 }
             });
             return Task.CompletedTask;
+        }
+
+        private async Task SetupServerRoles(IGuild server)
+        {
+            var role = server.GetRole(SettingsFile.CachedSettings.Discord.Role);
+            if(role == null)
+            {
+                Logger.LogMessage("Discord: Cant find needed Serverrole.");
+                Logger.LogMessage("Discord: Creating now");
+                role = await server.CreateRoleAsync(SettingsFile.CachedSettings.Discord.Role, GuildPermissions.None, Color.DarkBlue, false, null);
+            }
         }
 
         #endregion Private Methods
